@@ -1,45 +1,31 @@
-'use strict'
-const url = require('url')
-const pkg = require('./package.json')
-const {send} = require('micro')
-const origin = process.env.ALLOW_ORIGIN
-const insecure_origins = (process.env.INSECURE_HTTP_ORIGINS || '').split(',')
-const middleware = require('./middleware.js')({ origin, insecure_origins })
+const express = require('express')
+const corsProxy = require('@isomorphic-git/cors-proxy/middleware.js')
+const service = require('@isomorphic-git/cors-proxy')
 
-async function service (req, res) {
-  middleware(req, res, () => {
-    let u = url.parse(req.url, true)
-
-    if (u.pathname === '/') {
-      res.setHeader('content-type', 'text/html')
-      let html = `<!DOCTYPE html>
-      <html>
-        <title>@isomorphic-git/cors-proxy</title>
-        <h1>@isomorphic-git/cors-proxy</h1>
-        <p>This is the server software that runs on <a href="https://cors.isomorphic-git.org">https://cors.isomorphic-git.org</a>
-           &ndash; a free service (generously sponsored by <a href="https://www.clever-cloud.com/?utm_source=ref&utm_medium=link&utm_campaign=isomorphic-git">Clever Cloud</a>)
-           for users of <a href="https://isomorphic-git.org">isomorphic-git</a> that enables cloning and pushing repos in the browser.</p>
-        <p>The source code is hosted on Github at <a href="https://github.com/isomorphic-git/cors-proxy">https://github.com/isomorphic-git/cors-proxy</a></p>
-        <p>It can also be installed from npm with <code>npm install <a href="https://npmjs.org/package/${pkg.name}">@isomorphic-git/cors-proxy</a></code></p>
-
-        <h2>Terms of Use</h2>
-        <p><b>This free service is provided to you AS IS with no guarantees.
-        By using this free service, you promise not to use excessive amounts of bandwidth.
-        </b></p>
-
-        <p><b>If you are cloning or pushing large amounts of data your IP address may be banned.
-        Please run your own instance of the software if you need to make heavy use this service.</b></p>
-
-        <h2>Allowed Origins</h2>
-        This proxy allows git clone / fetch / push / getRemoteInfo requests from these domains: <code>${process.env.ALLOW_ORIGIN || '*'}</code>
-      </html>
-      `
-      return send(res, 400, html)
-    }
-
-    // Don't waste my precious bandwidth
-    return send(res, 403, '')
-  })
+const port = process.env.PORT
+const options = {
+  origin: '*'
+  // insecure_origins: ['']
 }
 
-module.exports = service
+const app = express()
+app.use(corsProxy(options))
+// Alternatively, app.use(service)
+
+app.get('/', (_req, res, _next) => {
+  res.send('Hello World!')
+})
+
+const rkUrl = process.env.RUNKIT_ENDPOINT_URL
+console.log(`You can test by running:
+$ npx isomorphic-git clone --corsProxy="RUNKIT_ENDPOINT_URL" --url="https://github.com/isomorphic-git/isomorphic-git.git"
+Redirects are not supported, so you'll need the root endpoint url...  not the one that ends with a path and starts with runkit.io, but the one that ends with runkit.sh.
+You can find out what your endpoint url is by visiting ${rkUrl}
+
+It should look something like "https://untitled-123abc.runkit.sh"
+DO NOT add a forward slash at the end!
+`)
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
