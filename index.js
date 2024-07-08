@@ -11,16 +11,11 @@ const options = {
 
 const app = express()
 app.use(corsProxy(options))
-app.use(helmet({ crossOriginEmbedderPolicy: false })
-);
+app.use(helmet({ crossOriginEmbedderPolicy: false }))
 // Alternatively, app.use(service)
 
 app.get('/', (_req, res, _next) => {
-  res.send('Hello World!')
-})
-
-app.get('/ping', (_req, res, _next) => {
-  res.status(200).send('ok')
+  res.send('cors proxy')
 })
 
 const rkUrl = process.env.RUNKIT_ENDPOINT_URL
