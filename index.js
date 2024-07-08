@@ -11,7 +11,7 @@ const options = {
 
 const app = express()
 app.use(corsProxy(options))
-app.use(helmet({ crossOriginEmbedderPolicy: false }))
+app.use(helmet({}))
 // Alternatively, app.use(service)
 
 app.get('/', (_req, res, _next) => {
