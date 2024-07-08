@@ -16,6 +16,10 @@ app.get('/', (_req, res, _next) => {
   res.send('Hello World!')
 })
 
+app.get('/ping', (_req, res, _next) => {
+  res.status(200).send({status: true})
+})
+
 const rkUrl = process.env.RUNKIT_ENDPOINT_URL
 console.log(`You can test by running:
 $ npx isomorphic-git clone --corsProxy="RUNKIT_ENDPOINT_URL" --url="https://github.com/isomorphic-git/isomorphic-git.git"
