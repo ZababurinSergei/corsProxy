@@ -2,7 +2,7 @@ const express = require('express')
 const corsProxy = require('@isomorphic-git/cors-proxy/middleware.js')
 const service = require('@isomorphic-git/cors-proxy')
 const helmet = require('helmet')
-// const cors = require("cors");
+const cors = require("cors");
 
 const port = process.env.PORT
 const options = {
@@ -12,7 +12,7 @@ const options = {
 
 const app = express()
 app.use(corsProxy(options))
-// app.use(cors())
+app.use(cors())
 app.use(helmet())
 // Alternatively, app.use(service)
 
