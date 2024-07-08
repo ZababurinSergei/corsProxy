@@ -2,7 +2,7 @@ const express = require('express')
 const corsProxy = require('@isomorphic-git/cors-proxy/middleware.js')
 const service = require('@isomorphic-git/cors-proxy')
 
-const port = process.env.PORT
+const port = process.env.PORT || 4325
 const options = {
   origin: '*'
   // insecure_origins: ['']
@@ -17,7 +17,7 @@ app.get('/', (_req, res, _next) => {
 })
 
 app.get('/ping', (_req, res, _next) => {
-  res.status(200).send({status: true})
+  res.status(200).send('ok')
 })
 
 const rkUrl = process.env.RUNKIT_ENDPOINT_URL
