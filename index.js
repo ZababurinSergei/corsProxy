@@ -13,7 +13,7 @@ const port = process.env.PORT || 4325
 const app = express()
 // app.use(corsProxy(options))
 app.use(cors())
-app.use(helmet({}))
+app.use(helmet())
 // Alternatively, app.use(service)
 
 app.get('/', (_req, res, _next) => {
