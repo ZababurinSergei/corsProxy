@@ -1,6 +1,7 @@
 const express = require('express')
 const corsProxy = require('@isomorphic-git/cors-proxy/middleware.js')
 const service = require('@isomorphic-git/cors-proxy')
+const helmet = require('helmet')
 
 const port = process.env.PORT || 4325
 const options = {
@@ -10,6 +11,8 @@ const options = {
 
 const app = express()
 app.use(corsProxy(options))
+app.use(helmet({ crossOriginEmbedderPolicy: false })
+);
 // Alternatively, app.use(service)
 
 app.get('/', (_req, res, _next) => {
